@@ -1,0 +1,56 @@
+defutf8 on
+defencoding utf8
+encoding utf-8 utf-8
+caption always "%{= wb} %-w%{=bu dr}%n %t%{-}%+w"
+#caption always "%{= wk} %-w%?%F%{=b kr}%:%{= kW}%? %n %t %{-}%+w"
+termcapinfo xterm* ti@:te@
+term xterm-256color
+
+#スタートメッセージオフ
+startup_message off
+#端末が落ちたら自動的にデタッチ
+autodetach on
+#ビジュアルベル（画面点滅）
+vbell off
+#スクロールバッファ数
+defscrollback 5000
+#エスケープキー変更
+escape ^Zz
+#別画面サポート。vimやless
+altscreen on
+
+#ウィンドウ操作モード(^z w でウィンドウを連続的に操作できるようになる)
+bind w eval 'echo "Operate window"' 'command -c operate'
+bind -c operate ^]  command
+bind -c operate k eval 'resize -v +1' 'command -c operate'
+bind -c operate j eval 'resize -v -1' 'command -c operate'
+bind -c operate l eval 'resize -h +1' 'command -c operate'
+bind -c operate h eval 'resize -h -1' 'command -c operate'
+bind -c operate = eval 'resize -v =' 'command -c operate'
+bind -c operate + eval 'resize -h =' 'command -c operate'
+bind -c operate s eval 'split' 'command -c operate'
+bind -c operate c eval 'screen' 'command -c operate'
+bind -c operate x eval 'remove' 'command -c operate'
+bind -c operate 0 eval 'select 0' 'command -c operate'
+bind -c operate 1 eval 'select 1' 'command -c operate'
+bind -c operate 2 eval 'select 2' 'command -c operate'
+bind -c operate 3 eval 'select 3' 'command -c operate'
+bind -c operate 4 eval 'select 4' 'command -c operate'
+bind -c operate 5 eval 'select 5' 'command -c operate'
+bind -c operate 6 eval 'select 6' 'command -c operate'
+bind -c operate 7 eval 'select 7' 'command -c operate'
+bind -c operate 8 eval 'select 8' 'command -c operate'
+bind -c operate 9 eval 'select 9' 'command -c operate'
+
+bind x remove
+bind q kill
+bind j eval 'focus down'
+bind k eval 'focus up'
+bind h eval 'focus left'
+bind l eval 'focus right'
+bind t eval 'focus top'
+bind b eval 'focus bottom'
+bind v eval 'split -v' focus screen
+bind s eval 'split' focus screen
+bind = eval 'resize -v ='
+bind + eval 'resize -h +'

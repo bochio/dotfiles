@@ -1,0 +1,132 @@
+# エスケープシーケンスを通す
+setopt prompt_subst
+
+# 補完強化
+autoload -U compinit
+compinit
+
+## Environment variable configuration
+#
+# LANG
+#
+export LANG=ja_JP.UTF-8
+
+### Default shell configuration
+#
+# set prompt
+#
+PROMPT=$'%{[$[32+$RANDOM % 5]m%}%U%B$HOST'"{%n}%b%%%{[m%}%u "
+RPROMPT=$'%{[33m%}[%~]%{[m%}'
+
+
+## 補完時の色付け
+#
+eval `dircolors`
+export ZLS_COLORS=$LS_COLORS
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+
+## 補完方法毎にグループ化する。
+### 補完方法の表示方法
+###   %B...%b: 「...」を太字にする。
+###   %d: 補完方法のラベル
+zstyle ':completion:*' format '%B%d%b'
+zstyle ':completion:*' group-name ''
+
+## 補完侯補をメニューから選択する。
+### select=2: 補完候補を一覧から選択する。
+###           ただし、補完候補が2つ以上なければすぐに補完する。
+zstyle ':completion:*:default' menu select=2
+
+## 補完候補がなければより曖昧に候補を探す。
+### m:{a-z}={A-Z}: 小文字を大文字に変えたものでも補完する。
+### r:|[._-]=*: 「.」「_」「-」の前にワイルドカード「*」があるものとして補完する。
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z} r:|[._-]=*'
+
+
+# set terminal title including current directory
+#
+case "${TERM}" in
+kterm*|xterm*)
+    precmd() {
+        echo -ne "\033]0;${USER}@${HOST%%.*}:${PWD}\007"
+    }
+    ;;
+esac
+
+# auto change directory
+#
+setopt auto_cd
+
+# auto directory pushd that you can get dirs list by cd -[tab]
+#
+setopt auto_pushd
+
+# pushdで同じディレクトリを重複してpushしない。
+setopt pushd_ignore_dups
+
+# command correct edition before each completion attempt
+#
+setopt correct
+
+# compacked complete list display
+#
+setopt list_packed
+
+# no beep sound when complete list display
+#
+setopt nolistbeep
+
+## Alias
+#
+setopt complete_aliases # aliased ls needs if file/dir completions work
+
+case "${OSTYPE}" in
+    freebsd*|darwin*)
+        alias ls="ls -G -w"
+        ;;
+    linux*)
+        alias ls="ls --color"
+        ;;
+    cygwin*)
+        alias ls="ls --color"
+        ;;
+esac
+
+alias la="ls -a"
+alias lf="ls -F"
+alias ll="ls -l"
+alias grep="grep --color"
+
+alias mysqlbb='mysql -u adm_bb_excite --password=adm_bb_excite --database=adm_bb_excite -h ganmo'
+alias mysqlbb_live='mysql -u adm_bb_excite --password=adm_bb_excite --database=adm_bb_excite -h com-db-master'
+alias mysqlskype='mysql -u skype --password=4g6UQi3A --database=skype -h hanpen'
+alias mysqlskype_live='mysql -u skype --password=4g6UQi3A --database=skype -h com-db-master'
+alias mysqlbbekas='mysql -u bb_mvno --password=ZsjhBSae -h dev-ekas-db -D bb_mvno'
+alias mysqlbbekas_live='mysql -u bb_mvno --password=UCylPRqB -h ekas-db-master -D bb_mvno'
+alias mysqlbbtoolekas='mysql -u bbtool --password=HP7t74yA -h dev-ekas-db -D bbtool'
+alias mysqlbbtoolekas_live='mysql -u bbtool --password=1sFSWcg5 -h ekas-db-master -D bbtool'
+
+alias sqlbb='sqlplus jpexcdn/cdnjpex@jpursr'
+alias sqleps='sqlplus jpeps/J11kAsePS@jpursr'
+alias sqlurs='sqlplus jurs/J11kAsURs@jpursr'
+
+## Command history configuration
+#
+HISTFILE=~/.zsh_history
+HISTSIZE=6000000
+SAVEHIST=6000000
+setopt hist_ignore_dups  # ignore duplication command history list
+setopt share_history     # share command history data
+
+# historical backward/forward search with linehead string binded to /
+#
+autoload history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey "" history-beginning-search-backward-end
+bindkey "" history-beginning-search-forward-end
+
+stty stop undef       # Ctrl-sによるコンソールロックの無効
+setopt IGNOREEOF      # Ctrl-dによるログアウトを無効にする
+
+bindkey -e
