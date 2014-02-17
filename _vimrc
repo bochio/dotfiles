@@ -1,3 +1,5 @@
+" ore no vimrc
+
 "" neobundle.vim
 set nocompatible
 filetype off
@@ -22,7 +24,7 @@ filetype plugin indent on
 " Installation check.
 if neobundle#exists_not_installed_bundles()
     echomsg 'Not installed bundles : ' .
-        \ string(neobundle#get_not_installed_bundle_names())
+                \ string(neobundle#get_not_installed_bundle_names())
     echomsg 'Please execute ":NeoBundleInstall" command.'
     "finish
 endif
@@ -68,13 +70,19 @@ set incsearch
 set laststatus=2
 set list
 set listchars=tab:\ \ ,trail:\ ,extends:<
+set matchpairs+=<:>
+set mouse=a
 set nobackup
 set number
+set scrolloff=10
 set showmode
 set showmatch
 set smartcase
+set smartindent
 set smarttab
 set shiftwidth=4
+set splitbelow
+set splitright
 set statusline=[%{winnr('$')>1?winnr().'/'.winnr('$'):''}]%f:%{substitute(getcwd(),'.*/','','')}\ %m%=%{(&fenc!=''?&fenc:&enc).':'.strpart(&ff,0,1)}\ %l-%v\ %p%%\ %02B
 set tabstop=4
 set title
@@ -171,3 +179,6 @@ highlight WhitespaceEOL ctermbg=gray guibg=gray
 match WhitespaceEOL /\s\+$/
 autocmd WinEnter * match WhitespaceEOL /\s\+$/
 
+" 背景にハイライトを設定しない。透過させるために必要
+highlight Normal ctermbg=none
+highlight NonText ctermbg=none
