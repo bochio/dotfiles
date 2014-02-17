@@ -109,6 +109,7 @@ alias mysqlbbtoolekas_live='mysql -u bbtool --password=1sFSWcg5 -h ekas-db-maste
 alias sqlbb='sqlplus jpexcdn/cdnjpex@jpursr'
 alias sqleps='sqlplus jpeps/J11kAsePS@jpursr'
 alias sqlurs='sqlplus jurs/J11kAsURs@jpursr'
+alias tmux='tmux -2 -u'
 
 ## Command history configuration
 #
@@ -130,3 +131,26 @@ stty stop undef       # Ctrl-sによるコンソールロックの無効
 setopt IGNOREEOF      # Ctrl-dによるログアウトを無効にする
 
 bindkey -e
+
+# ssh wrapper that rename current tmux window to the hostname of the
+# remote host.
+ssh() {
+    # Do nothing if we are not inside tmux or ssh is called without arguments
+    if [[ $# == 0 || -z $TMUX ]]; then
+        command ssh $@
+        return
+    fi
+    # The hostname is the last parameter (i.e. ${(P)#})
+    local remote=${${(P)#}%.*}
+    local old_name="$(tmux display-message -p '#W')"
+    local renamed=0
+    # Save the current name
+    if [[ $remote != -* ]]; then
+        renamed=1
+        tmux rename-window $remote
+    fi
+    command ssh $@
+    if [[ $renamed == 1 ]]; then
+        tmux rename-window "$old_name"
+    fi
+}
