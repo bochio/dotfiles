@@ -86,6 +86,7 @@ set splitright
 set statusline=[%{winnr('$')>1?winnr().'/'.winnr('$'):''}]%f:%{substitute(getcwd(),'.*/','','')}\ %m%=%{(&fenc!=''?&fenc:&enc).':'.strpart(&ff,0,1)}\ %l-%v\ %p%%\ %02B
 set tabstop=4
 set title
+set ttymouse=xterm2
 
 " 前回終了したカーソル行に移動
 autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal g`\"" | endif
