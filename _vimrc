@@ -7,17 +7,18 @@ filetype plugin indent off
 
 if has('vim_starting')
     set runtimepath+=~/.vim/bundle/neobundle.vim/
-    call neobundle#rc(expand('~/.vim/bundle/'))
+    call neobundle#begin(expand('~/.vim/bundle/'))
 endif
 
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'ujihisa/unite-colorscheme'
 NeoBundle 'Shougo/vimproc'
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neosnippet.git'
 
 " Color Scheme
-NeoBundle 'molokai'
+NeoBundle 'tomasr/molokai'
 
 filetype plugin indent on
 
@@ -31,7 +32,6 @@ endif
 
 " Color Scheme Configure
 set t_Co=256
-colorscheme molokai
 
 " neocomplcache
 let g:neocomplcache_enable_at_startup = 1
@@ -59,8 +59,9 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 "endif
 
 " general settings
-syntax on
+syntax enable
 
+colorscheme molokai
 set autoindent
 set backspace=indent,eol,start
 set expandtab

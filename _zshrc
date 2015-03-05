@@ -1,9 +1,15 @@
 # エスケープシーケンスを通す
 setopt prompt_subst
 
+fpath=(~/.zsh/completion $fpath)
+
 # 補完強化
 autoload -U compinit
-compinit
+compinit -u
+
+# 名前で色をつけるようにする
+autoload colors
+colors
 
 ## Environment variable configuration
 #
@@ -15,13 +21,34 @@ export LANG=ja_JP.UTF-8
 #
 # set prompt
 #
-PROMPT=$'%{[$[32+$RANDOM % 5]m%}%U%B$HOST'"{%n}%b%%%{[m%}%u "
-RPROMPT=$'%{[33m%}[%~]%{[m%}'
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*' max-exports 6 # formatに入る変数の最大数
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' formats '%b@%r' '%c' '%u'
+zstyle ':vcs_info:git:*' actionformats '%b@%r|%a' '%c' '%u'
+setopt prompt_subst
+function vcs_echo {
+    local st branch color
+    STY= LANG=en_US.UTF-8 vcs_info
+    st=`git status 2> /dev/null`
+    if [[ -z "$st" ]]; then return; fi
+    branch="$vcs_info_msg_0_"
+    if   [[ -n "$vcs_info_msg_1_" ]]; then color=${fg[green]} #staged
+    elif [[ -n "$vcs_info_msg_2_" ]]; then color=${fg[red]} #unstaged
+    elif [[ -n `echo "$st" | grep "^Untracked"` ]]; then color=${fg[blue]} # untracked
+    else color=${fg[cyan]}
+    fi
+    echo "%{$color%}(%{$branch%})%{$reset_color%}" | sed -e s/@/"%F{yellow}@%f%{$color%}"/
+}
+PROMPT='%K{magenta}(%*)%k `vcs_echo`
+%{[$[32+$RANDOM % 5]m%}%U%B$HOST'"{%n}%b%%%{[m%}%u "
+RPROMPT='%{[33m%}[%~]%{[m%}'
 
 
 ## 補完時の色付け
 #
-eval `dircolors`
+export LS_COLORS='di=01;34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
 export ZLS_COLORS=$LS_COLORS
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
